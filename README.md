@@ -104,3 +104,4 @@ prescriptosafe/
    - Point out the official **RxCUI badges** and **FDA Boxed Warnings**.
 5. **SMS Delivery (20s)**: Click "Share via SMS", enter your number, and show the completed report (sent live or showing simulated receipt details).
 6. **Closing (10s)**: State that PrescriptoSafe acts as a secondary safety shield, working from any mobile photo without new clinic infrastructure.
+"# prescriptosafe" 
