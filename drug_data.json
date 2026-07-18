@@ -1,0 +1,59 @@
+{
+  "aliases": {
+    "paracetamol": "paracetamol",
+    "acetaminophen": "paracetamol",
+    "pcm": "paracetamol",
+    "crocin": "paracetamol",
+    "dolo": "paracetamol",
+    "ibuprofen": "ibuprofen",
+    "brufen": "ibuprofen",
+    "amoxicillin": "amoxicillin",
+    "amoxil": "amoxicillin",
+    "metformin": "metformin",
+    "glycomet": "metformin",
+    "amlodipine": "amlodipine",
+    "amlong": "amlodipine",
+    "azithromycin": "azithromycin",
+    "azithral": "azithromycin",
+    "warfarin": "warfarin",
+    "aspirin": "aspirin",
+    "disprin": "aspirin",
+    "omeprazole": "omeprazole",
+    "cetirizine": "cetirizine",
+    "atorvastatin": "atorvastatin",
+    "losartan": "losartan",
+    "insulin": "insulin",
+    "dextrose": "dextrose",
+    "ors": "ors",
+    "oral rehydration salts": "ors"
+  },
+  "dosage_limits": {
+    "paracetamol":   { "max_single_mg": 1000, "max_daily_mg": 4000 },
+    "ibuprofen":     { "max_single_mg": 800,  "max_daily_mg": 3200 },
+    "amoxicillin":   { "max_single_mg": 1000, "max_daily_mg": 3000 },
+    "metformin":     { "max_single_mg": 1000, "max_daily_mg": 2550 },
+    "amlodipine":    { "max_single_mg": 10,   "max_daily_mg": 10 },
+    "azithromycin":  { "max_single_mg": 500,  "max_daily_mg": 500 },
+    "aspirin":       { "max_single_mg": 650,  "max_daily_mg": 4000 },
+    "atorvastatin":  { "max_single_mg": 80,   "max_daily_mg": 80 },
+    "losartan":      { "max_single_mg": 100,  "max_daily_mg": 100 },
+    "omeprazole":    { "max_single_mg": 40,   "max_daily_mg": 40 },
+    "cetirizine":    { "max_single_mg": 10,   "max_daily_mg": 10 }
+  },
+  "interactions": [
+    { "pair": ["warfarin", "aspirin"], "severity": "high", "note": "Increased bleeding risk when combined." },
+    { "pair": ["warfarin", "ibuprofen"], "severity": "high", "note": "NSAIDs increase bleeding risk with warfarin." },
+    { "pair": ["metformin", "insulin"], "severity": "medium", "note": "Combined use increases risk of hypoglycemia; monitor blood sugar." },
+    { "pair": ["amlodipine", "atorvastatin"], "severity": "low", "note": "May increase atorvastatin levels; generally monitored, not contraindicated." },
+    { "pair": ["azithromycin", "atorvastatin"], "severity": "medium", "note": "Increased risk of muscle-related side effects; temporary statin pause often advised." },
+    { "pair": ["aspirin", "ibuprofen"], "severity": "medium", "note": "Ibuprofen can reduce the protective cardiac effect of low-dose aspirin." }
+  ],
+  "contraindications": [
+    { "drug": "ibuprofen", "condition": "pregnancy", "severity": "high", "note": "Avoid NSAIDs in pregnancy, especially in third trimester (risk of premature closure of ductus arteriosus)." },
+    { "drug": "ibuprofen", "condition": "kidney_disease", "severity": "high", "note": "NSAIDs decrease renal blood flow and can worsen kidney function." },
+    { "drug": "metformin", "condition": "kidney_disease", "severity": "high", "note": "Metformin is contraindicated in renal impairment due to risk of lactic acidosis." },
+    { "drug": "losartan", "condition": "pregnancy", "severity": "high", "note": "Boxed Warning: Drugs that act directly on the renin-angiotensin system can cause fetal injury and death." },
+    { "drug": "amlodipine", "condition": "heart_failure", "severity": "medium", "note": "Use calcium channel blockers with caution in patients with heart failure." },
+    { "drug": "aspirin", "condition": "pregnancy", "severity": "medium", "note": "High-dose aspirin should be avoided in late pregnancy; consult doctor for low-dose." }
+  ]
+}

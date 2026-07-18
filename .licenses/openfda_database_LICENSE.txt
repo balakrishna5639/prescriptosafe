@@ -1,0 +1,8 @@
+Notification Date: 2026-07-17T16:07:19+05:30
+User was notified to check openFDA database terms of use and API documentation.
+
+Reference Links:
+- openFDA APIs: https://open.fda.gov/apis/
+- openFDA License: https://open.fda.gov/license
+
+The user has approved proceeding with the openFDA integration under these terms.

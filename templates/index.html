@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PrescriptoSafe — AI Prescription Safety Checker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-wrap">
+    <div class="brand">
+      <span class="brand-mark">℞</span>
+      <span class="brand-name">PrescriptoSafe</span>
+    </div>
+    <div class="header-status">
+      <span class="status-pulse"></span>
+      <span class="status-text">FDA Live Connection: Active</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section id="upload-section" class="panel">
+    <h1>Check a prescription</h1>
+    <p class="muted">Upload a photo or scan — handwritten or printed. We'll read it, cross-check dosages, and flag anything unsafe.</p>
+
+    <div id="dropzone" class="dropzone">
+      <input type="file" id="fileInput" accept="image/*" hidden>
+      <div id="dropzoneContent">
+        <div class="dropzone-icon">📄</div>
+        <p><strong>Click to upload</strong> or drag a prescription image here</p>
+        <p class="muted small">JPG, PNG — clearer photos give better results</p>
+      </div>
+      <img id="previewImg" class="preview-img" hidden>
+    </div>
+
+    <button id="analyzeBtn" class="btn-primary" disabled>Analyze Prescription</button>
+    <p id="mockNotice" class="mock-notice" hidden>⚠ No Gemini API key configured — showing demo data.</p>
+  </section>
+
+  <section id="loading-section" class="panel" hidden>
+    <div class="scanning-card">
+      <div class="scanner-container">
+        <img id="loadingPreviewImg" class="loading-preview-img" alt="Scanning Prescription">
+        <div class="scan-line"></div>
+      </div>
+      <div class="loading-status">
+        <div class="spinner-small"></div>
+        <p>Reading prescription & running FDA safety checks...</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="results-section" class="panel" hidden>
+    <div class="results-layout">
+      <!-- Left side: Image and canvas overlay -->
+      <div class="image-viewer-pane">
+        <h3>Prescription Scan</h3>
+        <div id="imageCanvasContainer" class="image-canvas-container">
+          <img id="resultsPreviewImg" class="results-preview-img" alt="Prescription Scan">
+          <div id="canvasOverlay" class="canvas-overlay"></div>
+        </div>
+      </div>
+      
+      <!-- Right side: Patient profile and editable forms -->
+      <div class="editor-pane">
+        <div class="results-header">
+          <h2>Verification Report</h2>
+          <span id="overallBadge" class="badge"></span>
+        </div>
+        
+        <!-- Patient Profile Form -->
+        <div class="profile-form">
+          <h3>Patient Profile</h3>
+          <div class="profile-fields">
+            <div class="form-group">
+              <label for="patientNameInput">Patient Name</label>
+              <input type="text" id="patientNameInput" placeholder="Name">
+            </div>
+            <div class="form-group">
+              <label for="patientAgeInput">Age</label>
+              <input type="number" id="patientAgeInput" placeholder="Age" min="0" max="120">
+            </div>
+            <div class="form-group">
+              <label for="patientPregnancyInput">Pregnancy Status</label>
+              <select id="patientPregnancyInput">
+                <option value="no">Not Pregnant</option>
+                <option value="yes">Pregnant</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label>Conditions / Comorbidities</label>
+              <div class="conditions-checkboxes">
+                <label><input type="checkbox" class="condition-cb" value="kidney_disease"> Kidney Disease</label>
+                <label><input type="checkbox" class="condition-cb" value="asthma"> Asthma</label>
+                <label><input type="checkbox" class="condition-cb" value="hypertension"> Hypertension</label>
+                <label><input type="checkbox" class="condition-cb" value="heart_failure"> Heart Failure</label>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Meds list (dynamic form list) -->
+        <h3>Medications & Dosing</h3>
+        <div id="medsFormList" class="meds-form-list"></div>
+        
+        <div class="action-buttons">
+          <button id="shareBtn" class="btn-primary" style="margin-top: 20px;">Share Report via SMS</button>
+          <button id="resetBtn" class="btn-secondary" style="margin-top: 10px; width: 100%;">Check another prescription</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Share Modal -->
+  <div id="shareModal" class="modal" hidden>
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Share Safety Report</h2>
+      <p class="muted small">Enter the patient's phone number to send a safety summary via SMS.</p>
+      <div class="form-group" style="margin-top: 15px;">
+        <label for="sharePhoneInput">Phone Number</label>
+        <input type="tel" id="sharePhoneInput" placeholder="+1234567890">
+      </div>
+      <button id="sendShareBtn" class="btn-primary" style="margin-top: 15px;">Send SMS</button>
+      <div id="shareStatus" class="share-status" hidden></div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <p>PrescriptoSafe — built for NxtWave Hackathon 2026. Not a substitute for professional medical advice.</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
