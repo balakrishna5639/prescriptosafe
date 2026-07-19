@@ -18,6 +18,7 @@ const patientNameInput = document.getElementById('patientNameInput');
 const patientAgeInput = document.getElementById('patientAgeInput');
 const patientPregnancyInput = document.getElementById('patientPregnancyInput');
 const medsFormList = document.getElementById('medsFormList');
+const validationLoader = document.getElementById('validationLoader');
 
 // Sharing Elements
 const shareBtn = document.getElementById('shareBtn');
@@ -403,6 +404,10 @@ async function triggerValidation() {
     });
   }
   
+  if (validationLoader) {
+    validationLoader.style.display = 'flex';
+  }
+  
   try {
     const res = await fetch('/api/validate', {
       method: 'POST',
@@ -455,6 +460,10 @@ async function triggerValidation() {
     }
   } catch (err) {
     console.error("Validation failed: ", err);
+  } finally {
+    if (validationLoader) {
+      validationLoader.style.display = 'none';
+    }
   }
 }
 

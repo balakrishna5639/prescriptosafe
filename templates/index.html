@@ -70,7 +70,13 @@
       <!-- Right side: Patient profile and editable forms -->
       <div class="editor-pane">
         <div class="results-header">
-          <h2>Verification Report</h2>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <h2>Verification Report</h2>
+            <div id="validationLoader" class="validation-loader" style="display: none; align-items: center; gap: 6px; font-size: 13px; color: var(--teal); font-weight: 500;">
+              <div class="spinner-small" style="width: 14px; height: 14px; border-width: 2.5px; border-top-color: var(--teal); margin: 0;"></div>
+              <span style="animation: textPulse 1.2s infinite ease-in-out;">Validating safety...</span>
+            </div>
+          </div>
           <span id="overallBadge" class="badge"></span>
         </div>
         

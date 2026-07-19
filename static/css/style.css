@@ -756,3 +756,8 @@ h3 {
   letter-spacing: 0.05em;
   border: 1px solid #C7D2FE;
 }
+
+@keyframes textPulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
