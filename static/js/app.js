@@ -494,6 +494,9 @@ function restoreCachedSession() {
           });
         }
       }
+      
+      // Trigger validation to ensure warnings and badges are rendered immediately for the restored session
+      triggerValidation();
     } catch (err) {
       console.error("Failed to restore cached session data:", err);
     }
