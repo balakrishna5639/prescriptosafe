@@ -53,6 +53,13 @@ IMPORTANT: Inside string fields (like raw_text, drug_name, patient_name, doctor_
 def clean_and_parse_json(text: str) -> dict:
     """Cleans and robustly parses JSON, repairing common issues like unescaped internal double-quotes."""
     text = text.strip()
+    
+    # Strip any extra text/markdown outside of the root JSON object
+    start_idx = text.find("{")
+    end_idx = text.rfind("}")
+    if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+        text = text[start_idx:end_idx + 1]
+
     try:
         return json.loads(text)
     except json.JSONDecodeError as e:
