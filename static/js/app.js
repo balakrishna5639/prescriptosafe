@@ -64,12 +64,7 @@ function handleFile(file) {
     resultsPreviewImg.src = base64;
     loadingPreviewImg.src = base64;
 
-    // Save image to localStorage
-    try {
-      localStorage.setItem('prescriptosafe_image', base64);
-    } catch (err) {
-      console.warn("Could not cache image to localStorage (likely quota exceeded):", err);
-    }
+
   };
   reader.readAsDataURL(file);
 }
@@ -91,8 +86,7 @@ analyzeBtn.addEventListener('click', async () => {
 
     currentData = data;
 
-    // Cache primary data in localStorage
-    localStorage.setItem('prescriptosafe_data', JSON.stringify(data));
+
 
     renderResults(data);
   } catch (err) {
@@ -380,8 +374,7 @@ async function triggerValidation() {
     conditions: Array.from(document.querySelectorAll('.condition-cb:checked')).map(cb => cb.value)
   };
 
-  // Cache profile data in localStorage
-  localStorage.setItem('prescriptosafe_profile', JSON.stringify(profile));
+
 
   // Scrape list of edited drugs
   const meds = [];
@@ -424,8 +417,7 @@ async function triggerValidation() {
       currentData.medications = result.medications;
       currentData.overall_severity = result.overall_severity;
 
-      // Cache data in localStorage
-      localStorage.setItem('prescriptosafe_data', JSON.stringify(currentData));
+
 
       // Update safety badge
       updateOverallBadge(result.overall_severity);
@@ -467,50 +459,9 @@ async function triggerValidation() {
   }
 }
 
-// Session restore logic on page load
-function restoreCachedSession() {
-  const cachedImg = localStorage.getItem('prescriptosafe_image');
-  const cachedData = localStorage.getItem('prescriptosafe_data');
-  const cachedProfile = localStorage.getItem('prescriptosafe_profile');
-
-  if (cachedImg) {
-    previewImg.src = cachedImg;
-    previewImg.hidden = false;
-    dropzoneContent.hidden = true;
-    resultsPreviewImg.src = cachedImg;
-    loadingPreviewImg.src = cachedImg;
-  }
-
-  if (cachedData) {
-    try {
-      currentData = JSON.parse(cachedData);
-      renderResults(currentData);
-
-      // Show results dashboard, hide upload screen
-      uploadSection.hidden = true;
-      uploadSection.style.display = 'none';
-
-      // Load profile inputs after rendering (since renderResults resets them)
-      if (cachedProfile) {
-        const profile = JSON.parse(cachedProfile);
-        patientNameInput.value = profile.name || '';
-        patientAgeInput.value = profile.age || '';
-        patientPregnancyInput.value = profile.pregnancy || 'no';
-
-        if (profile.conditions) {
-          document.querySelectorAll('.condition-cb').forEach(cb => {
-            cb.checked = profile.conditions.includes(cb.value);
-          });
-        }
-      }
-
-      // Trigger validation to ensure warnings and badges are rendered immediately for the restored session
-      triggerValidation();
-    } catch (err) {
-      console.error("Failed to restore cached session data:", err);
-    }
-  }
-}
-
-// Register initialization on DOM ready
-window.addEventListener('DOMContentLoaded', restoreCachedSession);
+// Clear any cached session data on page load to ensure fresh state on reload
+window.addEventListener('DOMContentLoaded', () => {
+  localStorage.removeItem('prescriptosafe_image');
+  localStorage.removeItem('prescriptosafe_data');
+  localStorage.removeItem('prescriptosafe_profile');
+});
