@@ -93,14 +93,4 @@ prescriptosafe/
     └── js/app.js          # SVG icons, bounding box plotting, localStorage cache, API connections
 ```
 
----
 
-## 🚀 Hackathon Demo Script (2-3 Minutes)
-1. **The Hook (15s)**: "Every year, millions of medication errors occur due to illegible handwritten prescriptions. Today, we are verifying a dental prescription from *The White Tusk* clinic for patient *Mr. Sachin Sansare*."
-2. **The Upload & PACS Scanner (20s)**: "We drop the photo into PrescriptoSafe. The PACS-style clinical monitor opens and a vertical laser line sweeps down the scan, digitizing the handwriting and querying NLM RxNorm and openFDA databases in parallel."
-3. **Interactive Grid & Coordinate Overlays (30s)**: "Once processed, the split-screen dashboard appears. Bounding boxes highlight the exact position of the text on the scan. Hovering over a bounding box immediately highlights the corresponding editable medication card on the right, keeping raw handwriting connected to clean digital entries."
-4. **Clinical Standardisation (30s)**: "Notice how the system standardizes `Augmentin` and `Pan-D`, pulling their official NLM **RxCUI codes** and **FDA labels** in real-time, validating dosages against the clinical knowledge base."
-5. **Real-time Patient Profile Simulation (45s)**: 
-   - "Our patient, Sachin, is a 28-year-old male. Let's see what happens if we simulate a comorbidity. *Enzoflam* contains Diclofenac (an NSAID). If we check the **Kidney Disease** box in the Patient Profile form, the validation engine instantly recalculates: the Enzoflam card flashes red, flagging a high-severity warning because NSAIDs are contraindicated in renal impairment."
-   - "Check **Asthma** -> Enzoflam triggers a warning about NSAID-induced bronchospasms in aspirin-sensitive patients. The overall safety badge changes from green to red in real-time."
-6. **SMS Report Sharing & Closing (20s)**: "Click **Share Report via SMS** and enter the patient's number. A formatted safety report detailing the check is sent directly to their phone via Twilio. PrescriptoSafe acts as an instant, zero-setup clinical shield."

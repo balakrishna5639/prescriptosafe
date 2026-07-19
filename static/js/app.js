@@ -59,11 +59,11 @@ function handleFile(file) {
     previewImg.hidden = false;
     dropzoneContent.hidden = true;
     analyzeBtn.disabled = false;
-    
+
     // Load into the results preview and loading preview images
     resultsPreviewImg.src = base64;
     loadingPreviewImg.src = base64;
-    
+
     // Save image to localStorage
     try {
       localStorage.setItem('prescriptosafe_image', base64);
@@ -90,10 +90,10 @@ analyzeBtn.addEventListener('click', async () => {
     if (!res.ok) throw new Error(data.error || 'Something went wrong');
 
     currentData = data;
-    
+
     // Cache primary data in localStorage
     localStorage.setItem('prescriptosafe_data', JSON.stringify(data));
-    
+
     renderResults(data);
   } catch (err) {
     alert('Analysis failed: ' + err.message);
@@ -114,7 +114,7 @@ resetBtn.addEventListener('click', () => {
   uploadSection.style.display = 'block';
   canvasOverlay.innerHTML = '';
   loadingPreviewImg.src = '';
-  
+
   // Clear session cache
   localStorage.removeItem('prescriptosafe_image');
   localStorage.removeItem('prescriptosafe_data');
@@ -147,10 +147,10 @@ sendShareBtn.addEventListener('click', async () => {
     alert("Please enter a valid phone number.");
     return;
   }
-  
+
   sendShareBtn.disabled = true;
   sendShareBtn.textContent = "Sharing...";
-  
+
   try {
     const res = await fetch('/api/share', {
       method: 'POST',
@@ -163,7 +163,7 @@ sendShareBtn.addEventListener('click', async () => {
       })
     });
     const data = await res.json();
-    
+
     shareStatus.hidden = false;
     if (data.sent_real) {
       shareStatus.className = "share-status";
@@ -214,7 +214,7 @@ function drawBoundingBoxes(medications) {
   medications.forEach((med, index) => {
     if (med.box_2d && med.box_2d.length === 4) {
       const [ymin, xmin, ymax, xmax] = med.box_2d;
-      
+
       const box = document.createElement('div');
       box.className = 'bbox-rect';
       box.id = `bbox-${index}`;
@@ -223,11 +223,11 @@ function drawBoundingBoxes(medications) {
       box.style.width = `${(xmax - xmin) / 10}%`;
       box.style.height = `${(ymax - ymin) / 10}%`;
       box.title = med.canonical_name || med.drug_name || 'Medication';
-      
+
       // Link selections
       box.addEventListener('mouseenter', () => highlightMedSelection(index));
       box.addEventListener('mouseleave', () => clearMedSelection(index));
-      
+
       canvasOverlay.appendChild(box);
     }
   });
@@ -360,7 +360,7 @@ document.querySelectorAll('.condition-cb').forEach(cb => {
 // Debounce helper
 function debounce(func, delay) {
   let debounceTimer;
-  return function() {
+  return function () {
     const context = this;
     const args = arguments;
     clearTimeout(debounceTimer);
@@ -371,7 +371,7 @@ function debounce(func, delay) {
 // Trigger safety validation post-change
 async function triggerValidation() {
   if (!currentData) return;
-  
+
   // Scrape profile details
   const profile = {
     pregnancy: patientPregnancyInput.value,
@@ -379,22 +379,22 @@ async function triggerValidation() {
     name: patientNameInput.value,
     conditions: Array.from(document.querySelectorAll('.condition-cb:checked')).map(cb => cb.value)
   };
-  
+
   // Cache profile data in localStorage
   localStorage.setItem('prescriptosafe_profile', JSON.stringify(profile));
-  
+
   // Scrape list of edited drugs
   const meds = [];
   const count = currentData.medications.length;
   for (let i = 0; i < count; i++) {
     const original = currentData.medications[i];
-    
+
     // Find inputs
     const nameVal = document.querySelector(`.med-name-input[data-index="${i}"]`).value;
     const doseVal = parseInt(document.querySelector(`.med-dose-input[data-index="${i}"]`).value) || null;
     const freqVal = parseInt(document.querySelector(`.med-freq-input[data-index="${i}"]`).value) || null;
     const durVal = parseInt(document.querySelector(`.med-dur-input[data-index="${i}"]`).value) || null;
-    
+
     meds.push({
       ...original,
       drug_name: nameVal,
@@ -403,11 +403,11 @@ async function triggerValidation() {
       duration_days: durVal
     });
   }
-  
+
   if (validationLoader) {
     validationLoader.style.display = 'flex';
   }
-  
+
   try {
     const res = await fetch('/api/validate', {
       method: 'POST',
@@ -418,18 +418,18 @@ async function triggerValidation() {
       })
     });
     const result = await res.json();
-    
+
     if (res.ok) {
       // Update data cache
       currentData.medications = result.medications;
       currentData.overall_severity = result.overall_severity;
-      
+
       // Cache data in localStorage
       localStorage.setItem('prescriptosafe_data', JSON.stringify(currentData));
-      
+
       // Update safety badge
       updateOverallBadge(result.overall_severity);
-      
+
       // Update individual drug flags UI and card borders
       result.medications.forEach((med, idx) => {
         const flagsContainer = document.getElementById(`flags-container-${idx}`);
@@ -472,7 +472,7 @@ function restoreCachedSession() {
   const cachedImg = localStorage.getItem('prescriptosafe_image');
   const cachedData = localStorage.getItem('prescriptosafe_data');
   const cachedProfile = localStorage.getItem('prescriptosafe_profile');
-  
+
   if (cachedImg) {
     previewImg.src = cachedImg;
     previewImg.hidden = false;
@@ -480,30 +480,30 @@ function restoreCachedSession() {
     resultsPreviewImg.src = cachedImg;
     loadingPreviewImg.src = cachedImg;
   }
-  
+
   if (cachedData) {
     try {
       currentData = JSON.parse(cachedData);
       renderResults(currentData);
-      
+
       // Show results dashboard, hide upload screen
       uploadSection.hidden = true;
       uploadSection.style.display = 'none';
-      
+
       // Load profile inputs after rendering (since renderResults resets them)
       if (cachedProfile) {
         const profile = JSON.parse(cachedProfile);
         patientNameInput.value = profile.name || '';
         patientAgeInput.value = profile.age || '';
         patientPregnancyInput.value = profile.pregnancy || 'no';
-        
+
         if (profile.conditions) {
           document.querySelectorAll('.condition-cb').forEach(cb => {
             cb.checked = profile.conditions.includes(cb.value);
           });
         }
       }
-      
+
       // Trigger validation to ensure warnings and badges are rendered immediately for the restored session
       triggerValidation();
     } catch (err) {
