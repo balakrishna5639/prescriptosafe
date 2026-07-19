@@ -34,6 +34,7 @@ PrescriptoSafe is a high-fidelity clinical decision support tool designed to ser
 6. **Interactive Side-by-Side Editor (Real-time Recalculations)**:
    - Split layout: Image pane on the left, editable profile and dosage form cards on the right.
    - Auto-saves inputs and triggers debounced validation requests, updating alerts and overall severity badges in real-time.
+   - Displays a pulsing **"Validating safety..."** loader animation next to the header during live compilation so clinicians have instant progress feedback.
 
 7. **Twilio SMS Sharing (Sandbox & Live)**:
    - Share a copy of the clinical safety report directly to the patient's phone.
