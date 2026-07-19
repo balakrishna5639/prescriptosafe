@@ -51,7 +51,7 @@ IMPORTANT: Inside string fields (like raw_text, drug_name, patient_name, doctor_
 # Gemini extraction
 # ---------------------------------------------------------------------------
 def clean_and_parse_json(text: str) -> dict:
-    """Cleans and robustly parses JSON, repairing common issues like unescaped internal double-quotes."""
+    """Cleans and robustly parses JSON, repairing common issues like unescaped internal double-quotes and missing commas."""
     text = text.strip()
     
     # Strip any extra text/markdown outside of the root JSON object
@@ -64,18 +64,51 @@ def clean_and_parse_json(text: str) -> dict:
         return json.loads(text)
     except json.JSONDecodeError as e:
         import re
-        lines = []
-        for line in text.splitlines():
-            # Match line with format: "key": "value"
+        
+        # Split into lines to inspect and repair syntax
+        lines = text.splitlines()
+        repaired_lines = []
+        
+        for idx in range(len(lines)):
+            line = lines[idx].rstrip()
+            if not line:
+                repaired_lines.append(line)
+                continue
+                
+            # 1. Escape unescaped double quotes inside value strings
             match = re.match(r'^(\s*"[^"]+"\s*:\s*")(.*)("\s*,?\s*)$', line)
             if match:
                 key_part, val_part, end_part = match.groups()
                 # Escape any unescaped double quotes inside value part
                 escaped_val = re.sub(r'(?<!\\)"', r'\"', val_part)
-                lines.append(f"{key_part}{escaped_val}{end_part}")
-            else:
-                lines.append(line)
-        reconstructed = "\n".join(lines)
+                line = f"{key_part}{escaped_val}{end_part}"
+            
+            repaired_lines.append(line)
+            
+        # 2. Add missing commas between key-value pairs
+        final_lines = []
+        for idx in range(len(repaired_lines)):
+            line = repaired_lines[idx].rstrip()
+            if not line:
+                final_lines.append(line)
+                continue
+                
+            # If this is not the last line, check if the next non-empty line starts with a key
+            if idx < len(repaired_lines) - 1:
+                next_non_empty = ""
+                for j in range(idx + 1, len(repaired_lines)):
+                    if repaired_lines[j].strip():
+                        next_non_empty = repaired_lines[j].strip()
+                        break
+                
+                if next_non_empty and re.match(r'^"[^"]+"\s*:', next_non_empty):
+                    last_char = line[-1]
+                    if last_char not in (',', '{', '[') and not line.strip().endswith('}'):
+                        line = line + ','
+            
+            final_lines.append(line)
+            
+        reconstructed = "\n".join(final_lines)
         try:
             return json.loads(reconstructed)
         except Exception:
